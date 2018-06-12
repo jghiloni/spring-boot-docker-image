@@ -1,0 +1,23 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: alpine
+
+inputs:
+- name: spring-boot
+- name: source
+
+outputs:
+- name: docker-staging
+
+run:
+  path: /bin/sh
+  args:
+  - exc
+  - |
+    cp spring-boot/starter.zip docker-staging
+    cp source/Dockerfile docker-staging
+    cat spring-boot/version | awk -F "." '{print $1 "." $2 "-latest"}' > docker-staging/tag

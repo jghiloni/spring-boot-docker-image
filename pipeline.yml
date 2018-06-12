@@ -1,0 +1,51 @@
+---
+boot_params: &boot_params
+  type: maven-project
+  dependencies: data-jpa,web,actuator,security,mysql,postgresql,scs-config-client,cloud-eureka,lombok,data-redis
+
+resource_types:
+- name: spring-initializr
+  type: docker-image
+  source:
+    repository: jghiloni/spring-initializr-resource
+
+resources:
+- name: spring-boot-15
+  type: spring-initializr
+  source:
+    product_version: '1\.5\..*'
+
+- name: spring-boot-20
+  type: spring-initializr
+  source:
+    product_version: '2\.0\..*'
+
+- name: docker-hub
+  type: docker-image
+  source:
+    repository: ((docker-repository))
+    username: ((docker-username))
+    password: ((docker-password))
+
+- name: source
+  type: git
+  check_every: 1h
+  source:
+    uri: ((git-uri))
+    branch: master
+
+jobs:
+- name: build-15
+  plan:
+  - aggregate:
+    - get: spring-boot
+      resource: spring-boot-15
+      trigger: true
+      params: *boot_params
+  - task: collect
+    file: source/collect.yml
+  - put: docker-hub
+    params:
+      build: docker-staging
+      tag: docker-staging/tag
+      additional_tags: spring-boot/version
