@@ -38,6 +38,8 @@ jobs:
 - name: build-15
   plan:
   - aggregate:
+    - get: source
+      trigger: true
     - get: spring-boot
       resource: spring-boot-15
       trigger: true
@@ -52,6 +54,8 @@ jobs:
 - name: build-20
   plan:
   - aggregate:
+    - get: source
+      trigger: true
     - get: spring-boot
       resource: spring-boot-20
       trigger: true

@@ -16,7 +16,7 @@ outputs:
 run:
   path: /bin/sh
   args:
-  - exc
+  - -exc
   - |
     cp spring-boot/starter.zip docker-staging
     cp source/Dockerfile docker-staging
