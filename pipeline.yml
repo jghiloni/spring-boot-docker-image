@@ -49,3 +49,17 @@ jobs:
       build: docker-staging
       tag: docker-staging/tag
       additional_tags: spring-boot/version
+- name: build-20
+  plan:
+  - aggregate:
+    - get: spring-boot
+      resource: spring-boot-20
+      trigger: true
+      params: *boot_params
+  - task: collect
+    file: source/collect.yml
+  - put: docker-hub
+    params:
+      build: docker-staging
+      tag: docker-staging/tag
+      additional_tags: spring-boot/version
